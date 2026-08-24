@@ -1,0 +1,15 @@
+services:
+  hospital-postgres:
+    image: postgres:18
+    container_name: hospital-postgres
+    environment:
+      POSTGRES_DB: hospitaldb
+      POSTGRES_USER: hospitaluser
+      POSTGRES_PASSWORD: hospitalpassword
+    ports:
+      - "5433:5432"
+    volumes:
+      - hospital_postgres_data:/var/lib/postgresql
+
+volumes:
+  hospital_postgres_data:
