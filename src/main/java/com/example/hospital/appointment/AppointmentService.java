@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
 
