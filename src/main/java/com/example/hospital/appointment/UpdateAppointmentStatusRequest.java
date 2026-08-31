@@ -7,7 +7,4 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param status nuovo stato dell'appuntamento
  */
-public record UpdateAppointmentStatusRequest(
-    @NotNull AppointmentStatus status
-) {
-}
+public record UpdateAppointmentStatusRequest(@NotNull AppointmentStatus status) {}

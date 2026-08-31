@@ -7,7 +7,4 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param patientId identificativo del paziente proprietario della cartella
  */
-public record CreateMedicalRecordRequest(
-    @NotNull Long patientId
-) {
-}
+public record CreateMedicalRecordRequest(@NotNull Long patientId) {}
