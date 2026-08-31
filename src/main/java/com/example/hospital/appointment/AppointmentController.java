@@ -26,7 +26,7 @@ public class AppointmentController {
      * @return lista degli appuntamenti
      */
     @GetMapping
-    public List<Appointment> findAll() {
+    public List<AppointmentResponse> findAll() {
         return appointmentService.findAll();
     }
 
@@ -37,7 +37,7 @@ public class AppointmentController {
      * @return appuntamento creato con risposta HTTP 201
      */
     @PostMapping
-    public ResponseEntity<Appointment> create(@Valid @RequestBody CreateAppointmentRequest request) {
+    public ResponseEntity<AppointmentResponse> create(@Valid @RequestBody CreateAppointmentRequest request) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(appointmentService.create(request));
@@ -51,7 +51,7 @@ public class AppointmentController {
      * @throws AppointmentNotFoundException se l'appuntamento non esiste
      */
     @GetMapping("/{id}")
-    public Appointment findById(@PathVariable Long id) {
+    public AppointmentResponse findById(@PathVariable Long id) {
         return appointmentService.findById(id);
     }
 
@@ -64,7 +64,7 @@ public class AppointmentController {
      * @throws AppointmentNotFoundException se l'appuntamento non esiste
      */
     @PutMapping("/{id}")
-    public Appointment update(@PathVariable Long id, @Valid @RequestBody CreateAppointmentRequest request) {
+    public AppointmentResponse update(@PathVariable Long id, @Valid @RequestBody CreateAppointmentRequest request) {
         return appointmentService.update(id, request);
     }
 
@@ -84,13 +84,13 @@ public class AppointmentController {
     /**
      * Aggiorna lo stato di un appuntamento.
      *
-     * @param id identificativo dell'appuntamento
+     * @param id      identificativo dell'appuntamento
      * @param request nuovo stato dell'appuntamento
      * @return appuntamento aggiornato
      * @throws AppointmentNotFoundException se l'appuntamento non esiste
      */
     @PatchMapping("/{id}/status")
-    public Appointment updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateAppointmentStatusRequest request ){
+    public AppointmentResponse updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateAppointmentStatusRequest request) {
         return appointmentService.updateStatus(id, request);
     }
 

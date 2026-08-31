@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Gestisce la logica applicativa relativa agli appuntamenti.
@@ -34,8 +35,10 @@ public class AppointmentService {
      * @return lista di appuntamenti
      */
     @Transactional(readOnly = true)
-    public List<Appointment> findAll() {
-        return appointmentRepository.findAll();
+    public List<AppointmentResponse> findAll() {
+        return appointmentRepository.findAll().stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList());
     }
 
 
@@ -47,8 +50,8 @@ public class AppointmentService {
      * @throws AppointmentNotFoundException se l'appuntamento non esiste
      */
     @Transactional(readOnly = true)
-    public Appointment findById(Long id) {
-        return appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException(id));
+    public AppointmentResponse findById(Long id) {
+        return toResponse(findEntityById(id));
     }
 
     /**
@@ -61,7 +64,7 @@ public class AppointmentService {
      * @throws DoctorNotFoundException  se il medico non esiste
      */
     @Transactional
-    public Appointment create(CreateAppointmentRequest request) {
+    public AppointmentResponse create(CreateAppointmentRequest request) {
         Patient patient = patientRepository.findById(request.patientId())
             .orElseThrow(() -> new PatientNotFoundException(request.patientId()));
         Doctor doctor = doctorRepository.findById(request.doctorId())
@@ -73,7 +76,7 @@ public class AppointmentService {
             request.appointmentDateTime(),
             request.status()
         );
-        return appointmentRepository.save(appointment);
+        return toResponse(appointmentRepository.save(appointment));
     }
 
     /**
@@ -85,8 +88,8 @@ public class AppointmentService {
      * @throws AppointmentNotFoundException se l'appuntamento non esiste
      */
     @Transactional
-    public Appointment update(Long id, CreateAppointmentRequest request) {
-        Appointment appointment = findById(id);
+    public AppointmentResponse update(Long id, CreateAppointmentRequest request) {
+        Appointment appointment = findEntityById(id);
 
         Patient patient = patientRepository.findById(request.patientId())
             .orElseThrow(() -> new PatientNotFoundException(request.patientId()));
@@ -100,7 +103,7 @@ public class AppointmentService {
         appointment.setAppointmentDateTime(request.appointmentDateTime());
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        return appointmentRepository.save(appointment);
+        return toResponse(appointmentRepository.save(appointment));
     }
 
     /**
@@ -111,7 +114,7 @@ public class AppointmentService {
      */
     @Transactional
     public void delete(Long id) {
-        appointmentRepository.delete(findById(id));
+        appointmentRepository.delete(findEntityById(id));
     }
 
     /**
@@ -120,16 +123,30 @@ public class AppointmentService {
      * @param id      identificativo dell'appuntamento
      * @param request nuovo stato dell'appuntamento
      * @return appuntamento aggiornato
-     * @throws AppointmentNotFoundException se l'appuntamento non esiste
-     * @throws InvalidAppointmentStatusTransitionException
-     *         se la transizione non è consentita
+     * @throws AppointmentNotFoundException                se l'appuntamento non esiste
+     * @throws InvalidAppointmentStatusTransitionException se la transizione non è consentita
      */
     @Transactional
-    public Appointment updateStatus(Long id, UpdateAppointmentStatusRequest request) {
-        Appointment appointment = findById(id);
+    public AppointmentResponse updateStatus(Long id, UpdateAppointmentStatusRequest request) {
+        Appointment appointment = findEntityById(id);
         validateStatusTransition(appointment.getStatus(), request.status());
         appointment.setStatus(request.status());
-        return appointmentRepository.save(appointment);
+        return toResponse(appointmentRepository.save(appointment));
+    }
+
+    private Appointment findEntityById(Long id) {
+        return appointmentRepository.findById(id)
+            .orElseThrow(() -> new AppointmentNotFoundException(id));
+    }
+
+    private AppointmentResponse toResponse(Appointment appointment) {
+        return new AppointmentResponse(
+            appointment.getId(),
+            appointment.getPatient().getId(),
+            appointment.getDoctor().getId(),
+            appointment.getAppointmentDateTime(),
+            appointment.getStatus()
+        );
     }
 
     /**
