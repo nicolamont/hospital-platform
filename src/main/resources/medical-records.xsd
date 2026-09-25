@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/hospital/medical-records"
+           xmlns:tns="http://example.com/hospital/medical-records"
+           elementFormDefault="qualified">
+
+    <xs:element name="getMedicalRecordSummaryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medicalRecordId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getMedicalRecordSummaryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="medicalRecordId" type="xs:long"/>
+                <xs:element name="patient" type="tns:patientSummary"/>
+                <xs:element name="diagnoses" type="tns:diagnosisList"/>
+                <xs:element name="prescriptions" type="tns:prescriptionList"/>
+                <xs:element name="examResults" type="tns:examResultList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="patientSummary">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="firstName" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="birthDate" type="xs:string"/>
+            <xs:element name="taxCode" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="diagnosisList">
+        <xs:sequence>
+            <xs:element name="diagnosis" type="tns:diagnosisSummary" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="diagnosisSummary">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="prescriptionList">
+        <xs:sequence>
+            <xs:element name="prescription" type="tns:prescriptionSummary" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="prescriptionSummary">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="medication" type="xs:string"/>
+            <xs:element name="dosage" type="xs:string"/>
+            <xs:element name="instructions" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="examResultList">
+        <xs:sequence>
+            <xs:element name="examResult" type="tns:examResultSummary" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="examResultSummary">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="examType" type="xs:string"/>
+            <xs:element name="result" type="xs:string"/>
+            <xs:element name="performedAt" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
