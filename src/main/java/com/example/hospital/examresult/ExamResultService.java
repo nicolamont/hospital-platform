@@ -15,8 +15,7 @@ public class ExamResultService {
   private final MedicalRecordRepository medicalRecordRepository;
 
   public ExamResultService(
-      ExamResultRepository examResultRepository,
-      MedicalRecordRepository medicalRecordRepository) {
+      ExamResultRepository examResultRepository, MedicalRecordRepository medicalRecordRepository) {
     this.examResultRepository = examResultRepository;
     this.medicalRecordRepository = medicalRecordRepository;
   }
@@ -42,8 +41,7 @@ public class ExamResultService {
   public ExamResultResponse create(CreateExamResultRequest request) {
     MedicalRecord medicalRecord = findMedicalRecordById(request.medicalRecordId());
     ExamResult examResult =
-        new ExamResult(
-            medicalRecord, request.examType(), request.result(), request.performedAt());
+        new ExamResult(medicalRecord, request.examType(), request.result(), request.performedAt());
     return toResponse(examResultRepository.save(examResult));
   }
 
@@ -63,9 +61,7 @@ public class ExamResultService {
   }
 
   private ExamResult findEntityById(Long id) {
-    return examResultRepository
-        .findById(id)
-        .orElseThrow(() -> new ExamResultNotFoundException(id));
+    return examResultRepository.findById(id).orElseThrow(() -> new ExamResultNotFoundException(id));
   }
 
   private MedicalRecord findMedicalRecordById(Long id) {
