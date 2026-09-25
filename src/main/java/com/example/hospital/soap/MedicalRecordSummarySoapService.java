@@ -5,7 +5,6 @@ import com.example.hospital.diagnosis.DiagnosisRepository;
 import com.example.hospital.examresult.ExamResult;
 import com.example.hospital.examresult.ExamResultRepository;
 import com.example.hospital.medicalrecord.MedicalRecord;
-import com.example.hospital.medicalrecord.MedicalRecordNotFoundException;
 import com.example.hospital.medicalrecord.MedicalRecordRepository;
 import com.example.hospital.prescription.Prescription;
 import com.example.hospital.prescription.PrescriptionRepository;
@@ -39,7 +38,7 @@ public class MedicalRecordSummarySoapService {
     MedicalRecord medicalRecord =
         medicalRecordRepository
             .findById(medicalRecordId)
-            .orElseThrow(() -> new MedicalRecordNotFoundException(medicalRecordId));
+            .orElseThrow(() -> new MedicalRecordSoapFaultException(medicalRecordId));
 
     GetMedicalRecordSummaryResponse response = new GetMedicalRecordSummaryResponse();
     response.setMedicalRecordId(medicalRecord.getId());
